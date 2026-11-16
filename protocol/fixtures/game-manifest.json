@@ -1,0 +1,20 @@
+{
+  "assets": {
+    "icon": "df6bf0779c3a1e38afa5e03ec40ef031e6999b10d24df0decdb79de16ad84666",
+    "screenshots": [
+      "296de86208a8e1ed72b12f6bb72d5f64012680749626ac8a5acddaae8a70d19d"
+    ]
+  },
+  "channels": {
+    "beta": "1.3.0-beta.1",
+    "stable": "1.2.0"
+  },
+  "description_md": "A **cool** game.",
+  "developer_pubkey": "ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+  "game_id": "b3m5htl3wjehc6dcbmofo6h6cq",
+  "protocol": "gamedist/0",
+  "releases": "https://host.example/games/cool-game/releases/",
+  "slug": "cool-game",
+  "summary": "One-line pitch",
+  "title": "Cool Game"
+}

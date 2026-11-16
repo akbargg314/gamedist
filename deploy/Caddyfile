@@ -1,0 +1,22 @@
+# Caddy reverse proxy for gamedist-server with automatic HTTPS.
+#
+# GAMEDIST_DOMAIN   public host name, e.g. games.example.org
+# GAMEDIST_UPSTREAM where gamedist-server listens (default 127.0.0.1:8080)
+#
+# Caddy appends the client address to X-Forwarded-For; run the server with
+# trust_proxy = true so rate limits and the tracker see real client IPs.
+
+{$GAMEDIST_DOMAIN} {
+	encode zstd gzip
+
+	# Release manifests may be up to 64 MiB, chunk uploads up to 8 MiB.
+	request_body {
+		max_size 80MB
+	}
+
+	# Optional: keep Prometheus metrics off the public internet.
+	# @metrics path /metrics
+	# respond @metrics 404
+
+	reverse_proxy {$GAMEDIST_UPSTREAM:127.0.0.1:8080}
+}

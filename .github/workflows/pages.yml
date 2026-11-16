@@ -1,0 +1,72 @@
+name: Pages
+
+# Builds the project website (site/ plus the mdBook from docs/) and deploys it
+# to GitHub Pages. Repository settings: Pages -> Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "docs/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time; let a running one finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  MDBOOK_VERSION: "0.5.4"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache mdBook
+        id: mdbook-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/mdbook
+          key: mdbook-${{ env.MDBOOK_VERSION }}-${{ runner.os }}
+
+      - name: Install mdBook
+        if: steps.mdbook-cache.outputs.cache-hit != 'true'
+        run: cargo install mdbook --version "$MDBOOK_VERSION" --locked --root ~/.local/mdbook
+
+      - name: Add mdBook to PATH
+        run: |
+          echo "$HOME/.local/mdbook/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/configure-pages@v5
+
+      - name: Assemble site
+        run: |
+          mdbook --version
+          sh site/build.sh "$RUNNER_TEMP/site"
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

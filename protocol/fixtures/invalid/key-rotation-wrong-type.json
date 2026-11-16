@@ -1,0 +1,9 @@
+{
+  "created": "2027-01-01T00:00:00Z",
+  "new_key": "ed25519:iojj3XQJ8ZX9UtstPLpdcspnCb8dlBIb83SIAbQPb1w",
+  "old_key": "ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+  "protocol": "gamedist/0",
+  "sig": "hBZbmuZPm9ClYqZrqv9nAG6FqAIgnBFEJaiXGdQcYf1UYHxGLcvO961QAZqCC5dD3VAQ7nbsQYlOGS6kK314Cw",
+  "slug": "cool-game",
+  "type": "something"
+}

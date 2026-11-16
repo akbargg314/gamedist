@@ -1,0 +1,10 @@
+[package]
+name = "sample-game"
+description = "Tiny dependency-free game used by GameDist integration tests"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[lints]
+workspace = true

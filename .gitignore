@@ -1,0 +1,10 @@
+/target
+/apps/launcher/src-tauri/target
+/apps/launcher/src-tauri/gen
+node_modules
+/apps/launcher/dist
+*.key
+/data
+.env
+/_site
+/docs/book

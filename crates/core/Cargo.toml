@@ -1,0 +1,42 @@
+[package]
+name = "gamedist-core"
+description = "GameDist protocol core: chunking, hashing, signing, manifests, content store, install and download engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+default = ["net"]
+# HTTP client + download engine. Disable for pure offline tooling.
+net = ["dep:reqwest", "dep:tokio", "dep:futures-util", "dep:bytes"]
+
+[dependencies]
+base64.workspace = true
+blake3.workspace = true
+chrono.workspace = true
+data-encoding.workspace = true
+ed25519-dalek.workspace = true
+fastcdc.workspace = true
+jsonschema.workspace = true
+rand.workspace = true
+rayon.workspace = true
+semver.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha1.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+unicode-normalization.workspace = true
+walkdir.workspace = true
+bytes = { workspace = true, optional = true }
+futures-util = { workspace = true, optional = true }
+reqwest = { workspace = true, optional = true }
+tokio = { workspace = true, optional = true }
+
+[dev-dependencies]
+tempfile.workspace = true
+tokio = { workspace = true, features = ["test-util"] }
+
+[lints]
+workspace = true

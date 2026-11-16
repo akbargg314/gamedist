@@ -1,0 +1,41 @@
+# GameDist distributor server image.
+#
+# Build from the repository root:
+#   docker build -f deploy/Dockerfile.server -t gamedist-server .
+# Run:
+#   docker run -p 8080:8080 -v gamedist-data:/data \
+#     -e GAMEDIST_PUBLIC_URL=https://games.example.org gamedist-server
+
+FROM rust:1-bookworm AS builder
+WORKDIR /src
+COPY . .
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/src/target \
+    cargo build -p gamedist-server --release --locked \
+    && install -Dm755 target/release/gamedist-server /out/gamedist-server
+
+FROM debian:bookworm-slim
+# curl is only used by HEALTHCHECK.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system --gid 10001 gamedist \
+    && useradd --system --uid 10001 --gid gamedist --home-dir /data --shell /usr/sbin/nologin gamedist \
+    && mkdir -p /data \
+    && chown gamedist:gamedist /data
+
+COPY --from=builder /out/gamedist-server /usr/local/bin/gamedist-server
+
+ENV GAMEDIST_DATA_DIR=/data \
+    GAMEDIST_LISTEN=0.0.0.0:8080 \
+    RUST_LOG=info
+
+USER gamedist
+VOLUME /data
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -fsS http://127.0.0.1:8080/.well-known/gamedist.json > /dev/null || exit 1
+
+ENTRYPOINT ["/usr/local/bin/gamedist-server"]
+CMD ["serve"]

@@ -1,0 +1,68 @@
+# systemd unit for gamedist-server.
+#
+# Install:
+#   install -m755 gamedist-server /usr/local/bin/
+#   install -Dm640 server.toml /etc/gamedist/server.toml   (data_dir = "/var/lib/gamedist")
+#   install -m644 gamedist-server.service /etc/systemd/system/
+#   systemctl daemon-reload && systemctl enable --now gamedist-server
+#
+# The service runs as the dedicated system user "gamedist" (created by
+# install.sh: `useradd --system --home-dir /var/lib/gamedist gamedist`).
+# State lives in /var/lib/gamedist (StateDirectory). To run admin commands
+# against the same database:
+#   sudo -u gamedist GAMEDIST_PASSWORD=… gamedist-server --config /etc/gamedist/server.toml user-add --email … --admin
+
+[Unit]
+Description=GameDist distributor server
+Documentation=https://github.com/akbargg314/gamedist
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=gamedist
+Group=gamedist
+ExecStart=/usr/local/bin/gamedist-server --config /etc/gamedist/server.toml serve
+Environment=RUST_LOG=info
+Environment=GAMEDIST_DATA_DIR=/var/lib/gamedist
+WorkingDirectory=/var/lib/gamedist
+StateDirectory=gamedist
+StateDirectoryMode=0750
+# /etc/gamedist is expected to be root:gamedist 0750 with server.toml 0640.
+ReadOnlyPaths=/etc/gamedist
+
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=5s
+
+# Hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectProc=invisible
+ProcSubset=pid
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RemoveIPC=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged
+UMask=0027
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

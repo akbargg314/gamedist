@@ -1,0 +1,53 @@
+# GameDist server behind Caddy with automatic HTTPS.
+#
+#   cd deploy
+#   cp .env.example .env      # set GAMEDIST_DOMAIN (DNS must point here; ports 80/443 open)
+#   docker compose up -d
+#   docker compose exec -e GAMEDIST_PASSWORD='…' gamedist \
+#     gamedist-server user-add --email you@example.org --admin
+
+name: gamedist
+
+services:
+  gamedist:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.server
+    image: ${GAMEDIST_IMAGE:-gamedist-server:local}
+    restart: unless-stopped
+    environment:
+      GAMEDIST_PUBLIC_URL: https://${GAMEDIST_DOMAIN:?set GAMEDIST_DOMAIN in .env}
+      GAMEDIST_TRUST_PROXY: "true"
+      GAMEDIST_DATA_DIR: /data
+      GAMEDIST_LISTEN: 0.0.0.0:8080
+      GAMEDIST_NAME: ${GAMEDIST_NAME:-GameDist server}
+      # Only applies until an admin changes it in the portal.
+      GAMEDIST_REGISTRATION: ${GAMEDIST_REGISTRATION:-closed}
+      RUST_LOG: ${RUST_LOG:-info}
+    volumes:
+      - gamedist-data:/data
+    # Not published on the host; only Caddy talks to it.
+    expose:
+      - "8080"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - gamedist
+    environment:
+      GAMEDIST_DOMAIN: ${GAMEDIST_DOMAIN:?set GAMEDIST_DOMAIN in .env}
+      GAMEDIST_UPSTREAM: gamedist:8080
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  gamedist-data:
+  caddy-data:
+  caddy-config:

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gamedist.org/schemas/v0/server-info.schema.json",
+  "title": "GameDist server info",
+  "type": "object",
+  "required": ["protocol", "name", "api", "chunks", "registration"],
+  "properties": {
+    "protocol": { "const": "gamedist/0" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "api": { "type": "string", "pattern": "^https?://" },
+    "chunks": { "type": "string", "pattern": "^https?://.*/$" },
+    "tracker": { "type": "string" },
+    "catalog": { "type": "string", "pattern": "^https?://" },
+    "registration": { "enum": ["open", "invite", "closed"] }
+  }
+}

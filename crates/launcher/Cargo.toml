@@ -1,0 +1,34 @@
+[package]
+name = "gamedist-launcher"
+description = "GameDist launcher engine and headless CLI (the Tauri GUI lives in apps/launcher)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "gamedist-launcher"
+path = "src/main.rs"
+
+[features]
+default = ["torrent"]
+# BitTorrent transport and seeding (librqbit).
+torrent = ["dep:librqbit"]
+
+[dependencies]
+gamedist-core.workspace = true
+clap.workspace = true
+dirs.workspace = true
+librqbit = { workspace = true, optional = true }
+sha1.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

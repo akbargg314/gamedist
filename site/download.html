@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src https://api.github.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Download GameDist</title>
+<meta name="description" content="Get the GameDist launcher, server and publisher CLI: the latest release from GitHub, or build from source.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#101318" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GameDist">
+<meta property="og:title" content="Download GameDist">
+<meta property="og:description" content="The launcher, server and publisher CLI: the latest release from GitHub, or build from source.">
+<meta property="og:url" content="https://akbargg314.github.io/gamedist/download.html">
+<meta property="og:image" content="https://akbargg314.github.io/gamedist/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The GameDist mark: a diamond made of four chunks, one of them highlighted.">
+<meta name="twitter:card" content="summary_large_image">
+<script src="download.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="./" aria-label="GameDist home">
+      <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="logo-g" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2f7bf0"/>
+            <stop offset="1" stop-color="#6a3df0"/>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" rx="7" fill="url(#logo-g)"/>
+        <g fill="#f5f7fc">
+          <path d="M16 5.6 20.4 10 16 14.4 11.6 10Z"/>
+          <path d="M10 11.6 14.4 16 10 20.4 5.6 16Z"/>
+          <path d="M16 17.6 20.4 22 16 26.4 11.6 22Z"/>
+        </g>
+        <path fill="#ffb547" d="M22 11.6 26.4 16 22 20.4 17.6 16Z"/>
+      </svg>
+      <span>GameDist</span>
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="./#how">How it works</a></li>
+        <li><a href="./#status">Status</a></li>
+        <li><a href="download.html" aria-current="page">Download</a></li>
+        <li><a href="docs/">Docs</a></li>
+        <li><a href="https://github.com/akbargg314/gamedist">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="page-head">
+    <div class="wrap">
+      <h1>Download</h1>
+      <p class="lead">GameDist is pre-release. Releases are published on GitHub; this page lists the files of the latest one. Until a release exists, or for the desktop app, build from source.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="release-box" id="release" aria-labelledby="release-title" aria-live="polite">
+      <h2 id="release-title">Latest release</h2>
+      <p>This page loads the list of release files from GitHub with JavaScript, which is off or unavailable here. See the <a href="https://github.com/akbargg314/gamedist/releases">releases page on GitHub</a> instead.</p>
+      <p>When this page was written, no release had been published yet. You can <a href="#source">build from source</a>.</p>
+    </section>
+
+    <section class="section" id="contents" aria-labelledby="contents-title">
+      <div class="cols">
+        <div>
+          <h2 id="contents-title">What a release contains</h2>
+          <p>The release workflow builds one archive per platform: <code>linux-x86_64</code>, <code>windows-x86_64</code> and <code>macos-aarch64</code> (Apple silicon). Each archive holds three programs, plus the license and README:</p>
+          <ul>
+            <li><code>gamedist-launcher</code>: the launcher, in its <strong>headless</strong> (command-line) mode only.</li>
+            <li><code>gamedist</code>: the publisher CLI for developers.</li>
+            <li><code>gamedist-server</code>: the distributor server. The Linux archive also contains the deploy files (<code>install.sh</code>, the systemd unit, a sample config, Caddy and nginx examples).</li>
+          </ul>
+          <p>A <code>SHA256SUMS</code> file lists the checksum of every archive. The workflow is also set up to push a server container image to <code>ghcr.io/akbargg314/gamedist-server</code>.</p>
+        </div>
+        <div>
+          <h2>Before you download</h2>
+          <ul>
+            <li><strong>No desktop app packages yet.</strong> The workflow does not build installers for the desktop app (<code>.deb</code>, <code>.AppImage</code>, <code>.msi</code>, <code>.dmg</code>). If a later release has them, this page lists them automatically.</li>
+            <li><strong>Windows and macOS builds are untested.</strong> Before the release workflow, nothing had been built on either; all testing so far has been on Linux.</li>
+            <li><strong>Binaries are not code-signed,</strong> so your operating system may warn before running them. Check the archive against <code>SHA256SUMS</code>:
+              <pre><code><span class="prompt">$ </span>sha256sum -c SHA256SUMS --ignore-missing</code></pre></li>
+            <li><strong>The Docker image and deploy scripts have not been tested.</strong> Please report what breaks.</li>
+          </ul>
+          <p>Games you install with the launcher are verified by the launcher itself; the launcher binary is verified by you.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="source" aria-labelledby="source-title">
+      <h2 id="source-title">Build from source</h2>
+      <div class="cols">
+        <div>
+          <h3>Server, CLI and headless launcher</h3>
+          <p>Needs a stable <a href="https://rustup.rs">Rust toolchain</a>.</p>
+          <pre><code><span class="prompt">$ </span>git clone https://github.com/akbargg314/gamedist.git
+<span class="prompt">$ </span>cd gamedist
+<span class="prompt">$ </span>cargo build --workspace --release</code></pre>
+          <p>The binaries are <code>target/release/gamedist-server</code>, <code>target/release/gamedist</code> and <code>target/release/gamedist-launcher</code> (headless). Then try the launcher:</p>
+          <pre><code><span class="prompt">$ </span>target/release/gamedist-launcher --headless --help</code></pre>
+          <p>To install only the publisher CLI: <code>cargo install --path crates/cli</code>.</p>
+          <p class="path-links"><a class="more" href="docs/run-a-server.html">Run a server</a> <a class="more" href="docs/publish-a-game.html">Publish a game</a></p>
+        </div>
+        <div>
+          <h3>Desktop app</h3>
+          <p>Needs Rust 1.90 or newer, Node.js 20+ with npm (or Deno 2), and the system webview. On Debian or Ubuntu:</p>
+          <pre><code><span class="prompt">$ </span>sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
+    libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+<span class="prompt">$ </span>cd gamedist/apps/launcher
+<span class="prompt">$ </span>npm install
+<span class="prompt">$ </span>npm run tauri dev      <span class="comment"># run it</span>
+<span class="prompt">$ </span>npm run tauri build    <span class="comment"># or make installable bundles</span></code></pre>
+          <p>Bundles land in <code>apps/launcher/src-tauri/target/release/bundle/</code>. Package names for Fedora and Arch, and the Windows and macOS prerequisites, are in the <a href="https://github.com/akbargg314/gamedist/blob/main/apps/launcher/README.md">launcher README</a>.</p>
+          <div class="note"><p>The app has been compiled and run by hand on Linux only, with <code>npm run tauri dev</code>. Bundling and builds on Windows and macOS are untested.</p></div>
+          <p class="path-links"><a class="more" href="docs/launcher.html">Launcher guide</a></p>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>GameDist is free software under the <a href="https://github.com/akbargg314/gamedist/blob/main/LICENSE">MIT license</a>. The release list comes from the GitHub API, requested by your browser.</p>
+    <ul>
+      <li><a href="./">Home</a></li>
+      <li><a href="docs/">Documentation</a></li>
+      <li><a href="https://github.com/akbargg314/gamedist/releases">All releases</a></li>
+      <li><a href="https://github.com/akbargg314/gamedist">Source code</a></li>
+    </ul>
+  </div>
+</footer>
+</body>
+</html>

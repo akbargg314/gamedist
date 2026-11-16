@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gamedist.org/schemas/v0/key-rotation.schema.json",
+  "title": "GameDist key-rotation statement",
+  "type": "object",
+  "required": ["protocol", "type", "slug", "old_key", "new_key", "created", "sig"],
+  "properties": {
+    "protocol": { "const": "gamedist/0" },
+    "type": { "const": "key-rotation" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+    "old_key": { "type": "string", "pattern": "^ed25519:[A-Za-z0-9_-]{43}$" },
+    "new_key": { "type": "string", "pattern": "^ed25519:[A-Za-z0-9_-]{43}$" },
+    "created": { "type": "string" },
+    "sig": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  }
+}

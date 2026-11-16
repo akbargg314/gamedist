@@ -1,0 +1,158 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: 0
+
+jobs:
+  build:
+    name: build (${{ matrix.label }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: linux-x86_64
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            exe: ""
+          - label: windows-x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            exe: ".exe"
+          - label: macos-aarch64
+            os: macos-latest
+            target: aarch64-apple-darwin
+            exe: ""
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release-${{ matrix.target }}
+
+      - name: Build
+        shell: bash
+        run: |
+          # gamedist-launcher here is the headless launcher; the GUI is not bundled yet.
+          cargo build --release --locked --target "${{ matrix.target }}" \
+            -p gamedist-server -p gamedist-cli -p gamedist-launcher
+          echo "BINS=gamedist-server gamedist gamedist-launcher" >> "$GITHUB_ENV"
+
+      - name: Package
+        shell: bash
+        run: |
+          name="gamedist-${{ matrix.label }}"
+          mkdir -p "dist/$name"
+          for bin in $BINS; do
+            cp "target/${{ matrix.target }}/release/${bin}${{ matrix.exe }}" "dist/$name/"
+          done
+          cp LICENSE README.md "dist/$name/"
+          if [ "${{ matrix.label }}" = "linux-x86_64" ]; then
+            mkdir -p "dist/$name/deploy"
+            cp deploy/install.sh deploy/gamedist-server.service deploy/server.toml.example \
+               deploy/Caddyfile deploy/nginx.conf.example "dist/$name/deploy/"
+          fi
+          cd dist
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            7z a -tzip "$name.zip" "$name" > /dev/null
+          else
+            tar -czf "$name.tar.gz" "$name"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.label }}
+          path: |
+            dist/*.tar.gz
+            dist/*.zip
+          if-no-files-found: error
+
+  release:
+    name: GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        working-directory: dist
+        run: sha256sum -- *.tar.gz *.zip > SHA256SUMS
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/SHA256SUMS
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+
+  docker:
+    name: server image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/gamedist-server
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable=${{ !contains(github.ref_name, '-') }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile.server
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # TODO: Tauri GUI bundles (MSI/NSIS, AppImage/deb, dmg). apps/launcher exists,
+  # and its Rust shell (src-tauri) compiles and runs on Linux, but is not packaged. Needs
+  # tauri-apps/tauri-action, system WebKitGTK on Linux and code signing
+  # secrets. Sketch:
+  #
+  # launcher-gui:
+  #   needs: release
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-22.04, windows-latest, macos-latest]
+  #   runs-on: ${{ matrix.os }}
+  #   permissions:
+  #     contents: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with: { node-version: 22 }
+  #     - uses: dtolnay/rust-toolchain@stable
+  #     - run: (cd apps/launcher && (npm ci || npm install))
+  #     - uses: tauri-apps/tauri-action@v0
+  #       with:
+  #         projectPath: apps/launcher
+  #         tagName: ${{ github.ref_name }}

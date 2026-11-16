@@ -1,0 +1,17 @@
+[book]
+title = "GameDist"
+description = "Open, decentralized game distribution: run a server, publish a game, play."
+authors = ["GameDist contributors"]
+language = "en"
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+# The book is published at https://akbargg314.github.io/gamedist/docs/
+# (see site/README.md). site-url only affects the book's own 404 page; change
+# it if the site moves to a custom domain.
+site-url = "/gamedist/docs/"
+git-repository-url = "https://github.com/akbargg314/gamedist"
+edit-url-template = "https://github.com/akbargg314/gamedist/edit/main/docs/{path}"

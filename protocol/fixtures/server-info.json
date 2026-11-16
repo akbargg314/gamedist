@@ -1,0 +1,9 @@
+{
+  "api": "https://host.example/api/v0",
+  "catalog": "https://host.example/api/v0/games",
+  "chunks": "https://cdn.example/chunks/",
+  "name": "Example Distributor",
+  "protocol": "gamedist/0",
+  "registration": "open",
+  "tracker": "https://host.example/announce"
+}

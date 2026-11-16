@@ -1,0 +1,27 @@
+[package]
+name = "gamedist-e2e"
+description = "End-to-end tests: server + CLI + launcher + sample game"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+# The sample game is built as a binary of this package so the tests get its
+# path through CARGO_BIN_EXE_sample-game-fixture.
+[[bin]]
+name = "sample-game-fixture"
+path = "../../examples/sample-game/src/main.rs"
+
+[dev-dependencies]
+gamedist-cli.workspace = true
+gamedist-core.workspace = true
+gamedist-launcher.workspace = true
+gamedist-server.workspace = true
+reqwest.workspace = true
+serde_json.workspace = true
+tempfile.workspace = true
+tokio.workspace = true
+sqlx.workspace = true
+
+[lints]
+workspace = true

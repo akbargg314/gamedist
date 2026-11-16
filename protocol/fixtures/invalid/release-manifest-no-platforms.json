@@ -1,0 +1,11 @@
+{
+  "changelog_md": "First public release.",
+  "created": "2026-11-16T07:00:00Z",
+  "developer_pubkey": "ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+  "game_id": "b3m5htl3wjehc6dcbmofo6h6cq",
+  "platforms": {},
+  "protocol": "gamedist/0",
+  "sig": "NsPkCMi8U2wi8LnV8DeT0vCp0v1afBqAUYl8yIXSj3bpLa8xgYpRy_L3PpG-R_pctO3nuldAf1ZyQdmzjaDdDA",
+  "slug": "cool-game",
+  "version": "1.2.0"
+}

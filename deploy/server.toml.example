@@ -1,0 +1,69 @@
+# gamedist-server configuration.
+#
+# Run with: gamedist-server --config /etc/gamedist/server.toml
+# (or set GAMEDIST_CONFIG). Every key is optional; the values shown are the
+# defaults. Unknown keys are rejected at startup.
+#
+# Environment variables override the file for the keys marked [env].
+
+# Human-readable server name shown in the portal and in server info. [env GAMEDIST_NAME]
+name = "GameDist server"
+
+# Address and port to listen on. Keep it on loopback behind a reverse proxy. [env GAMEDIST_LISTEN]
+listen = "127.0.0.1:8080"
+
+# Externally visible base URL, without a trailing slash. Every URL the server
+# hands out (API, chunks, releases, tracker) is built from it. When empty it is
+# derived from `listen`, which is only suitable for local testing.
+# [env GAMEDIST_PUBLIC_URL]
+public_url = ""
+
+# Directory holding the SQLite database (gamedist.sqlite) and chunk storage
+# (chunks/). Back this directory up. Relative paths are relative to the
+# working directory. [env GAMEDIST_DATA_DIR]
+data_dir = "data"
+
+# Initial registration mode: "open", "invite" or "closed". Once an admin
+# changes it in the portal (/admin) the stored setting wins over this value.
+# On an "open" server the first account to register becomes administrator.
+# [env GAMEDIST_REGISTRATION]
+registration = "closed"
+
+# Initial per-account storage quota in bytes; 0 = unlimited. Default 20 GiB.
+# Like `registration`, the admin setting wins once changed; admins can also
+# set per-account quotas. [env GAMEDIST_DEFAULT_QUOTA_BYTES]
+default_quota_bytes = 21474836480
+
+# Serve chunks from this URL prefix instead of <public_url>/chunks/, e.g. a
+# CDN that pulls from /chunks/. A trailing "/" is added if missing.
+# Unset by default. [env GAMEDIST_CHUNKS_URL]
+# chunks_url = "https://cdn.example.org/chunks/"
+
+# Expose the public catalog (/api/v0/games, /api/v0/export.jsonl and the
+# landing-page listing). [env GAMEDIST_CATALOG]
+catalog = true
+
+# Run the built-in HTTP BitTorrent tracker at /announce and put it into
+# generated torrents. [env GAMEDIST_TRACKER]
+tracker = true
+
+# Extra tracker announce URLs added to generated torrents.
+external_trackers = []
+
+# Interval, in seconds, that the tracker tells clients to wait between announces.
+tracker_interval_secs = 120
+
+# Trust the right-most X-Forwarded-For entry as the client address. Set to
+# true only when a reverse proxy you control sits in front of the server;
+# otherwise clients can spoof their address. [env GAMEDIST_TRUST_PROXY]
+trust_proxy = false
+
+# Login and registration attempts allowed per client IP per minute.
+auth_rate_per_minute = 20
+
+# Chunk uploads allowed per client IP per minute.
+upload_rate_per_minute = 6000
+
+# Unreferenced chunks older than this many days are deleted by the hourly
+# garbage collector (and by `gamedist-server gc`).
+gc_grace_days = 7

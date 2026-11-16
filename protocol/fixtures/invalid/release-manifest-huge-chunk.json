@@ -1,0 +1,84 @@
+{
+  "changelog_md": "First public release.",
+  "created": "2026-11-16T07:00:00Z",
+  "developer_pubkey": "ed25519:11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+  "game_id": "b3m5htl3wjehc6dcbmofo6h6cq",
+  "platforms": {
+    "linux-x86_64": {
+      "files": [
+        {
+          "chunks": [
+            {
+              "id": "646f09ff597048e25370c79a89443a535e21b0132559a06ad79325ad05f33c1b",
+              "size": 8388609
+            }
+          ],
+          "mode": 493,
+          "path": "CoolGame.x86_64",
+          "size": 23
+        },
+        {
+          "chunks": [
+            {
+              "id": "28ed81c4fbca8be08a97040c441f4d123ca4c752320601e9a26420e583cbcbe9",
+              "size": 5
+            },
+            {
+              "id": "f1bbb95efd5e9faf8898e5a06b926723427904c544994ff7adb9cb02d78ad7f8",
+              "size": 6
+            }
+          ],
+          "mode": 420,
+          "path": "data/levels.pak",
+          "size": 11
+        }
+      ],
+      "launch": {
+        "args": [],
+        "cwd": ".",
+        "exe": "CoolGame.x86_64"
+      },
+      "total_size": 34
+    },
+    "windows-x86_64": {
+      "files": [
+        {
+          "chunks": [
+            {
+              "id": "85bec2a3a440127275672844603618dcb4b64ed272925dd4012c8ce4c07a92e5",
+              "size": 25
+            }
+          ],
+          "mode": 493,
+          "path": "CoolGame.exe",
+          "size": 25
+        },
+        {
+          "chunks": [
+            {
+              "id": "28ed81c4fbca8be08a97040c441f4d123ca4c752320601e9a26420e583cbcbe9",
+              "size": 5
+            },
+            {
+              "id": "f1bbb95efd5e9faf8898e5a06b926723427904c544994ff7adb9cb02d78ad7f8",
+              "size": 6
+            }
+          ],
+          "mode": 420,
+          "path": "data/levels.pak",
+          "size": 11
+        }
+      ],
+      "launch": {
+        "args": [],
+        "cwd": ".",
+        "exe": "CoolGame.exe"
+      },
+      "total_size": 36
+    }
+  },
+  "protocol": "gamedist/0",
+  "sig": "NsPkCMi8U2wi8LnV8DeT0vCp0v1afBqAUYl8yIXSj3bpLa8xgYpRy_L3PpG-R_pctO3nuldAf1ZyQdmzjaDdDA",
+  "slug": "cool-game",
+  "version": "1.2.0"
+}

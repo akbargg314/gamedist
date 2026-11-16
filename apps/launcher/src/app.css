@@ -1,0 +1,275 @@
+/* Theme tokens: dark by default, light via prefers-color-scheme. */
+:root {
+  color-scheme: dark;
+  --bg: #12151b;
+  --surface-0: #0d1015;
+  --surface-1: #181c24;
+  --surface-2: #1f2430;
+  --surface-3: #2a3040;
+  --border: #2c3342;
+  --text: #d6dbe5;
+  --text-strong: #ffffff;
+  --text-dim: #8d97a8;
+  --accent: #4c9dff;
+  --accent-2: #ffb547;
+  --accent-soft: rgb(76 157 255 / 0.16);
+  --on-accent: #06121f;
+  --success: #52d08a;
+  --danger: #ff5c6c;
+  --warning: #ffb547;
+  --warning-soft: rgb(255 181 71 / 0.12);
+  --focus: #8cc2ff;
+  --backdrop: rgb(4 6 10 / 0.7);
+  --shadow-lg: 0 12px 40px rgb(0 0 0 / 0.45);
+  /* Throughput graph series (validated for colour-vision deficiencies on --surface-1). */
+  --chart-net: #4a96f5;
+  /* Network bytes from other players; also told apart from --chart-net by a hatch. */
+  --chart-peers: #3bbf9a;
+  --chart-disk: #c97f28;
+  --chart-up: #9d74ee;
+  --chart-grid: rgb(255 255 255 / 0.07);
+  --radius: 6px;
+  --radius-lg: 10px;
+  --mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Noto Sans',
+    Ubuntu,
+    Cantarell,
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f3f5f9;
+    --surface-0: #ffffff;
+    --surface-1: #ffffff;
+    --surface-2: #f6f7fa;
+    --surface-3: #e8ebf1;
+    --border: #d9dee7;
+    --text: #1e2430;
+    --text-strong: #0a0d12;
+    --text-dim: #5b6576;
+    --accent: #1667d9;
+    --accent-2: #c77700;
+    --accent-soft: rgb(22 103 217 / 0.1);
+    --on-accent: #ffffff;
+    --success: #18864b;
+    --danger: #c9263a;
+    --warning: #9a5b00;
+    --warning-soft: rgb(199 119 0 / 0.1);
+    --focus: #1667d9;
+    --backdrop: rgb(20 24 32 / 0.45);
+    --shadow-lg: 0 12px 40px rgb(10 20 40 / 0.18);
+    --chart-net: #1667d9;
+    --chart-peers: #0f8a6c;
+    --chart-disk: #c77700;
+    --chart-up: #8f55db;
+    --chart-grid: rgb(10 20 40 / 0.08);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+#app {
+  height: 100%;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--text-strong);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--accent);
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---- buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    filter 0.12s;
+}
+.btn:hover:not(:disabled) {
+  background: var(--surface-3);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.btn.primary:hover:not(:disabled),
+.btn.play:hover:not(:disabled),
+.btn.accent2:hover:not(:disabled),
+.btn.danger:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+.btn.play {
+  background: linear-gradient(180deg, #5fd68f, #2fa862);
+  border-color: #2fa862;
+  color: #04210f;
+}
+.btn.accent2 {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: #1a1000;
+}
+.btn.running {
+  color: var(--success);
+}
+.btn.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+.btn.danger-outline {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 50%, transparent);
+  background: transparent;
+}
+.btn.big {
+  min-height: 46px;
+  padding: 10px 26px;
+  font-size: 1.05rem;
+}
+.btn.small {
+  min-height: 28px;
+  padding: 3px 10px;
+  font-size: 0.82rem;
+}
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--text-dim);
+  font: inherit;
+  cursor: pointer;
+}
+.icon-btn:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* ---- inputs ---- */
+.input {
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-0);
+  color: var(--text);
+  font: inherit;
+  min-width: 0;
+  max-width: 100%;
+}
+.input.mono {
+  font-family: var(--mono);
+  font-size: 0.88rem;
+}
+.input:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 0;
+  border-color: transparent;
+}
+.input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+.input:disabled {
+  opacity: 0.55;
+}
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+  flex: none;
+}
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.field > span {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.field small {
+  color: var(--text-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

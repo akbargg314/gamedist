@@ -1,0 +1,45 @@
+[package]
+name = "gamedist-launcher-app"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "GameDist player launcher (Tauri shell)"
+repository = "https://github.com/akbargg314/gamedist"
+publish = false
+default-run = "gamedist-launcher"
+
+# This crate needs system WebKit/GTK (Linux) or WebView2 (Windows), so it is
+# deliberately NOT a member of the root workspace (see ../../../Cargo.toml
+# `exclude`). It is its own workspace; build it from this directory.
+[workspace]
+
+[[bin]]
+name = "gamedist-launcher"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+gamedist-launcher = { path = "../../../crates/launcher" }
+gamedist-core = { path = "../../../crates/core" }
+tauri = { version = "2", features = [] }
+tauri-plugin-deep-link = "2"
+tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
+tauri-plugin-dialog = "2"
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time"] }
+# Free/total space of the install filesystem (`disk_space`); MIT OR Apache-2.0,
+# rustix on Unix and windows-sys on Windows, both already in the tree.
+fs4 = { version = "1", default-features = false }
+
+[profile.release]
+lto = "thin"
+strip = true
+codegen-units = 1
+
+# Hashing and crypto are painfully slow unoptimised.
+[profile.dev.package."*"]
+opt-level = 2

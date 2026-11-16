@@ -1,0 +1,38 @@
+[package]
+name = "gamedist-cli"
+description = "gamedist: the developer CLI for publishing games to GameDist servers"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "gamedist"
+path = "src/main.rs"
+
+[features]
+default = ["keyring"]
+# Store API tokens in the OS keyring (falls back to a 0600 file when unavailable).
+keyring = ["dep:keyring"]
+
+[dependencies]
+gamedist-core.workspace = true
+clap.workspace = true
+dirs.workspace = true
+futures-util.workspace = true
+indicatif.workspace = true
+keyring = { workspace = true, optional = true }
+reqwest.workspace = true
+rpassword.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+toml.workspace = true
+
+[dev-dependencies]
+gamedist-server.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

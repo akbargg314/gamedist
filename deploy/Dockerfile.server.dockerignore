@@ -1,0 +1,9 @@
+# BuildKit picks this up for deploy/Dockerfile.server (build context = repo root).
+.git
+target
+**/target
+**/node_modules
+apps/launcher/dist
+data
+deploy/.env
+*.key
